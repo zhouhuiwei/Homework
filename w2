@@ -121,6 +121,7 @@ void main(){
 			op[i] = generateOp();
 		}
 		num[i] = generateNum();//生成“分数”数组和操作符数组 
+		
 		cout << endl << m << ':';
 		for (i = 0; i < j; i++){
 			if (num[i].b == 1) cout << num[i].a;
@@ -132,6 +133,7 @@ void main(){
 		}
 		if (num[i].b == 1)cout << num[i].a << '=';
 		else cout << num[i].a << num[i].line << num[i].b << '=';;// 输出计算式
+		
 		for (i = 0; i < j; i++){
 			if (op[i] == '*' || '/'){
 				num[i + 1] = cal(num[i], op[i], num[i + 1]);
@@ -142,6 +144,7 @@ void main(){
 				num[i + 1] = cal(num[i], op[i], num[i + 1]);
 				test.a = num[i + 1].a; test.b = num[i + 1].b;
 			}//进行计算			
+			
 			fs answer;
 			if (test.b == 1){
 				cin >> answer.a;
@@ -154,8 +157,8 @@ void main(){
 			}
 			else {
 				cout << "不正确！正确答案=";
-				if (num[i].b == 1) cout << num[i + 1].a ;
-				else cout << num[i + 1].a << '/' << num[i + 1].b;
+				if (num[i].b == 1) cout << num[i].a ;
+				else cout << num[i].a << '/' << num[i].b;
 			}
 		}
 	}
