@@ -2,141 +2,165 @@
 #include <math.h>
 #include <string>
 #include <assert.h>
-#include <iostream.h>
+#include <iostream>
+#include <conio.h>  
+#include <cstdlib> 
+#include <time.h>
+
+using namespace std;
 
 /*定义一个结构体:分数*/
 struct fs
-{  
-    int a;//above分子 
-    char line;  
-    int b;// below分母 
-    };  
-    
-/*求最大公约数*/
-int gys(int a,int b)
 {
-    if(!b) return a;
-    else return gys(b,a%b);
-    }  //辗转相除法 
-    
-/*生成随机数（100以内、真分数）*/    
+	int a;//above分子 
+	char line;
+	int b;// below分母 
+};
+
+/*求最大公约数*/
+int gys(int a, int b)
+{
+	if (!b) return a;
+	else return gys(b, a%b);
+}  //辗转相除法 
+
+/*生成随机数（100以内、真分数）*/
 fs generateNum()
 {
-    int a,b,t;
-    fs num;
-    if(rand()%4==1)//随机产生0,1,2,3，当刚好是1时，产生分数 （这里概率一定是1/4吗？有没有让它概率不固定的办法？） 
-    {
-        a=rand()%10+1;
-        b=rand()%10+1;
-        if(a>b) {t=a;a=b;b=t;}//使分子小于分母，确保真分数 
-        t=gys(a,b);
-        a=a/t;
-        b=b/t;
-    }//生成分数 
-    else
-    {
-        a=rand()%100+1;
-        b=1;
-    }//生成整数，即分母为1 
-    num.a=a;
-    num.b=b;
-    return num;//返回结构体：分数的值 
-} 
+	int a, b, t;
+	fs num;
+	if (rand() % 4 == 1)//随机产生0,1,2,3，当刚好是1时，产生分数 （这里概率一定是1/4吗？有没有让它概率不固定的办法？） 
+	{
+		a = rand() % 10 + 1;
+		b = rand() % 10 + 1;
+		if (a>b) { t = a; a = b; b = t; }//使分子小于分母，确保真分数 
+		t = gys(b, a);
+		a = a / t;
+		b = b / t;
+	}//生成分数 
+	else
+	{
+		a = rand() % 10 + 1;
+		b = 1;
+	}//生成整数，即分母为1 
+	num.a = a;
+	num.b = b;
+	num.line = '/';
+	return num;//返回结构体：分数的值 
+}
 
-/*生成操作符*/ 
+/*生成操作符*/
 char generateOp()
 {
-    char op;
-    int n;
-    n=rand()%4;//根据随机数的值，确定运算符，然后输出
-    if(n==3){op='*'; printf("×",op);}
-    if(n==4){op='/'; printf("÷",op);}
-    else printf("%c",op);
-    return op;
-} 
+	char op;
+	int n;
+	n=rand()%4;//根据随机数的值，确定运算符，然后输出
+	if (n==0) op='+';
+	if (n==1) op='-';
+	if (n==2) op='*'; 
+	if (n==3) op='/';
+	return op;
+}
 
 /*两个“分数”的四则运算*/
 fs cal(fs n1, char op, fs n2)
 {
-    fs num;
-    switch(op){
-        case '+':{
-             num.a=n1.a*n2.b+n2.a*n1.b;
-             num.b=n1.b*n2.b;
-             break;
-        }
-        case '-':{
-             num.a=n1.a*n2.b-n2.a*n1.b;
-             num.b=n1.b*n2.b;
-             if(num.b<0){num.a=-num.a;num.b=-num.b;}//保证分数为负数时，负号加在分子上 （是不是要考虑不让题目中出现任一负数结果？）
-             break;
-        }
-        case 'x':{
-             num.a=n1.a*n2.a;
-             num.b=n1.b*n2.b;
-             break;
-        }
-        case '/':{
-            num.a=n1.a*n2.b;
-            num.b=n1.b*n2.a;
-            break;
-        }
-        default:{
-            num.a=0;
-            num.b=1;
-        }
-    }
-    int t;
-    if(num.a<num.b)
-        t=gys(num.b,num.a);
-    else 
-        t=gys(num.a,num.b); 
-    num.a=num.a/t;
-    num.b=num.b/t;//约分
-    return num;
+	fs num;
+	switch (op){
+	case '+':{
+				 num.a = n1.a*n2.b + n2.a*n1.b;
+				 num.b = n1.b*n2.b;
+				 break;
+	}
+	case '-':{
+				 num.a = n1.a*n2.b - n2.a*n1.b;
+				 num.b = n1.b*n2.b;
+				 break;
+	}
+	case '*':{
+				 num.a = n1.a*n2.a;
+				 num.b = n1.b*n2.b;
+				 break;
+	}
+	case '/':{
+				 num.a = n1.a*n2.b;
+				 num.b = n1.b*n2.a;
+				 break;
+	}
+	default:{
+				num.a = 0;
+				num.b = 1;
+	}
+	}
+	int t;
+	if (num.a<num.b)
+		t = gys(num.b, num.a);
+	else
+		t = gys(num.a, num.b);
+	num.a = num.a / t;
+	num.b = num.b / t;//约分
+	if (num.b<0){
+		num.a = -num.a;
+		num.b = -num.b;
+	}//保证分数为负数时，负号加在分子上 （是不是要考虑不让题目中出现任一负数结果？）
+	return num;
 }
 
-/*主函数*/ 
+/*主函数*/
 void main(){
-     srand((unsigned)time(NULL));//随机数生成函数初始化 
-     char op[10];
-     struct fs num[10];
-     int m,n,i,j,k=0;
-     cout<<"满分100分。请输入题目数："<<endl; 
-     cin>>n;
-     for(m=1;m<=n;m++){
-         j=rand()%10+1;// 随机决定生成的操作符数目 
-         for(i=0;i<=j;i++){
-             num[i]=generateNum();
-             op[i]=generateOp()；                
-         }//生成“分数”数组和操作符数组 
-         cout<<"\n"<<m<<'.'<<enl;
-         for(i=0;i<=j;i++){
-             if(op[i]=='*')cout<<num[i]<<'×'<<endl;
-             if(op[i]=='/')cout<<num[i]<<'÷'<<endl;
-             else cout<<num[i]<<op[i]<<endl;
-         } 
-         cout<<num[i+1]<<'='<<endl;//输出计算式。（从循环到这儿，i+1对吗 ？ ） 
-         for(i=0;i<=j;i++){
-             if(op[i]=='*'||'/'){
-                 num[i+1]=cal(num[i],op[i],num[i+1]);
-                 op[i]='+';
-             }
-         for(i=0;i<=j;i++){
-             n[i+1]=cal(num[i],op[i],num[i+1]);
-         }//进行计算 
-         fs answer;
-         cout<<"(如果是整数请在后面加“/1”)" <<endl;
-         cin>>answer.a>>answer.line>>answer.b;
-         if(answer==num[i+1]){
-             cout<<"\n回答正确！" <<endl;
-             k+=1;
-         }
-         else cout<<"\n不正确！正确答案="<<num[i+1]<<endl; 
-     }
-     float s=100*k/n; 
-     cout<<"\n正确率："<<k/n<<"/n本次得分："<<s<<endl;
-} 
-     
-     
-     
+	srand((unsigned)time(NULL));//随机数生成函数初始化 
+	char op[10];
+	struct fs num[10],test;
+	int m, n, i, j, k = 0;
+	cout << "请输入题目数：" ;
+	cin >> n;
+	for (m = 1; m <= n; m++){
+		j = rand() % 10 + 1;// 随机生成该题的操作符数目：1~10
+		for (i = 0; i < j; i++){
+			num[i] = generateNum();
+			op[i] = generateOp();
+		}
+		num[i] = generateNum();//生成“分数”数组和操作符数组 
+		cout << endl << m << ':';
+		for (i = 0; i < j; i++){
+			if (num[i].b == 1) cout << num[i].a;
+			else cout << num[i].a << num[i].line << num[i].b;
+			if (op[i] == '*')cout << "×";
+			else if (op[i] == '/')cout << "÷";
+			else if (op[i] == '+')cout << "+"; 
+			else cout << "-"; 
+		}
+		if (num[i].b == 1)cout << num[i].a << '=';
+		else cout << num[i].a << num[i].line << num[i].b << '=';;// 输出计算式
+		for (i = 0; i < j; i++){
+			if (op[i] == '*' || '/'){
+				num[i + 1] = cal(num[i], op[i], num[i + 1]);
+				num[i].a = 0;
+				op[i] = '+';
+			}		
+			for (i = 0; i < j; i++){
+				num[i + 1] = cal(num[i], op[i], num[i + 1]);
+				test.a = num[i + 1].a; test.b = num[i + 1].b;
+			}//进行计算			
+			fs answer;
+			if (test.b == 1){
+				cin >> answer.a;
+				answer.b = 1;
+			}
+			else cin >> answer.a >> answer.line >> answer.b;
+			if (answer.a == test.a && answer.b == test.b){
+				printf("正确！");
+				k += 1;
+			}
+			else {
+				cout << "不正确！正确答案=";
+				if (num[i].b == 1) cout << num[i + 1].a ;
+				else cout << num[i + 1].a << '/' << num[i + 1].b;
+			}
+		}
+	}
+		float s =100*k/n;
+		cout << "\n正确率：" << k << '/' << n << endl;
+		cout << "本次得分：" << s << endl;
+		cin >> test.a;
+}
