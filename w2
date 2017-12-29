@@ -108,8 +108,8 @@ int main(){
 	char yes;
 	while (!begin){
 		srand((unsigned)time(NULL));//随机数生成函数初始化 
-		char op[10], next = 'y';
-		struct fs num[10], test;
+		char op[100], next = 'y';
+		struct fs num[100], test;
 		int q, h, m, n, i, j, k = 0;
 		cout << "_________________\n本次满分100。" << endl << "请输入题目数：";
 		cin >> n;
@@ -132,23 +132,60 @@ int main(){
 			}
 			if (num[i].b == 1)cout << num[i].a << '=';
 			else cout << num[i].a << num[i].line << num[i].b << '=';;// 输出计算式
-
+//-----------------------------------------------------------------------------------------
 			for (q = 0; q < j; q++){
+				cout << endl << op[q] << endl;
 				if (op[q] == '*' || '/'){
+					cout << "come into if";
 					num[q + 1] = cal(num[q], op[q], num[q + 1]);
-					if (q&&op[q - 1] == '-'){
+					if (q != 0 && op[q - 1] == '-'){
+						cout << "come into if2";
 						op[q - 1] = '+';
 						num[q + 1].a = -num[q + 1].a;
+						num[q + 1].line = '/';
+						num[q + 1].b = num[q + 1].b;
 					}
 					num[q].a = 0;
+					num[q + 1].line = '/';
+					num[q + 1].b = 1;
 					op[q] = '+';
 				}
-			}//先算乘除		
+				else if(op[q] == '+' || '-'){
+					"come into else if";
+					op[q] = op[q];
+					num[q] = num[q];
+				}
+					
+				//------------------------------------------------------------------------				
+				cout << endl << '*' << ' ';
+				for (i = 0; i < j; i++){
+					if (num[i].b == 1) cout << num[i].a;
+					else cout << num[i].a << num[i].line << num[i].b;
+					if (op[i] == '*')cout << "×";
+					else if (op[i] == '/')cout << "÷";
+					else if (op[i] == '+')cout << "+";
+					else cout << "-";
+				}
+				if (num[i].b == 1)cout << num[i].a << '=';
+				else cout << num[i].a << num[i].line << num[i].b << '=';;// 输出计算式
+			}//先算乘除
+//-----------------------------------------------------------------------------------------
 			for (h = 0; h < j; h++){
 				num[h + 1] = cal(num[h], op[h], num[h + 1]);
 				test.a = num[h + 1].a; test.b = num[h + 1].b;
-			}//进行计算
-			cout << "答案:"<<test.a << '/' << test.b;
+				cout << endl << '+' << ' ';
+				for (i = 0; i < j; i++){
+					if (num[i].b == 1) cout << num[i].a;
+					else cout << num[i].a << num[i].line << num[i].b;
+					if (op[i] == '*')cout << "×";
+					else if (op[i] == '/')cout << "÷";
+					else if (op[i] == '+')cout << "+";
+					else cout << "-";
+				}
+				if (num[i].b == 1)cout << num[i].a << '=';
+				else cout << num[i].a << num[i].line << num[i].b << '=';;// 输出计算式
+			}//再算加减
+//-----------------------------------------------------------------------------------------			cout<<endl << "答案:"<<test.a << '/' << test.b;
 
 			fs answer;
 			if (test.b == 1){
