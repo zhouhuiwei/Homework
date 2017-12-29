@@ -133,33 +133,38 @@ void main(){
 		}
 		if (num[i].b == 1)cout << num[i].a << '=';
 		else cout << num[i].a << num[i].line << num[i].b << '=';;// 输出计算式
-		
+
 		for (i = 0; i < j; i++){
 			if (op[i] == '*' || '/'){
 				num[i + 1] = cal(num[i], op[i], num[i + 1]);
+				if (i&&op[i - 1] == '-'){
+					op[i - 1] = '+'; 
+					num[i + 1].a = -num[i + 1].a; 
+				}				
 				num[i].a = 0;
 				op[i] = '+';
-			}		
-			for (i = 0; i < j; i++){
-				num[i + 1] = cal(num[i], op[i], num[i + 1]);
-				test.a = num[i + 1].a; test.b = num[i + 1].b;
-			}//进行计算			
+			}
+		}//先算乘除		
+		for (i = 0; i < j; i++){
+			num[i + 1] = cal(num[i], op[i], num[i + 1]);
+			test.a = num[i + 1].a; test.b = num[i + 1].b;
+		}//进行计算			
 			
-			fs answer;
-			if (test.b == 1){
-				cin >> answer.a;
-				answer.b = 1;
-			}
-			else cin >> answer.a >> answer.line >> answer.b;
-			if (answer.a == test.a && answer.b == test.b){
-				printf("正确！");
-				k += 1;
-			}
-			else {
-				cout << "不正确！正确答案=";
-				if (num[i].b == 1) cout << num[i].a ;
-				else cout << num[i].a << '/' << num[i].b;
-			}
+		fs answer;
+		if (test.b == 1){
+			cin >> answer.a;
+			answer.b = 1;
+		}
+		else cin >> answer.a >> answer.line >> answer.b;
+		
+		if (answer.a == test.a && answer.b == test.b){
+			printf("正确！");
+			k += 1;
+		}
+		else {
+			cout << "不正确！正确答案=";
+			if (num[i].b == 1) cout << num[i].a ;
+			else cout << num[i].a << '/' << num[i].b;
 		}
 	}
 		float s =100*k/n;
