@@ -40,7 +40,7 @@ fs generateNum()
 	}//生成分数 
 	else
 	{
-		a = rand() % 10 + 1;
+		a = rand() % 100 + 1;
 		b = 1;
 	}//生成整数，即分母为1 
 	num.a = a;
@@ -109,11 +109,11 @@ int main(){
 	while (!begin){
 		srand((unsigned)time(NULL));//随机数生成函数初始化 
 		char op[10], next = 'y';
-		struct fs num[10], test;
+		struct fs num[10];
 		int q, h, m, n, i, j, k = 0;
 		cout << "_________________\n本次满分100。" << endl << "请输入题目数：";
 		cin >> n;
-		for (m = 1; m <= n; m++){
+		for (m = 1; m <= 5; m++){
 			j = rand() % 10 + 1;// 随机生成该题的操作符数目：1~10
 			for (i = 0; i < j; i++){
 				num[i] = generateNum();
@@ -134,45 +134,45 @@ int main(){
 			else cout << num[i].a << num[i].line << num[i].b << '=';;// 输出计算式
 
 			for (q = 0; q < j; q++){
-				if (op[q] == '*' || '/'){
+				if (op[q] == '*' || op[q] == '/') {					
 					num[q + 1] = cal(num[q], op[q], num[q + 1]);
-					if (q&&op[q - 1] == '-'){
+					if (q != 0 && op[q - 1] == '-'){						
 						op[q - 1] = '+';
 						num[q + 1].a = -num[q + 1].a;
+						num[q + 1].line = '/';
+						num[q + 1].b = num[q + 1].b;
 					}
 					num[q].a = 0;
+					num[q + 1].line = '/';//-
+					num[q + 1].b = 1;//-
 					op[q] = '+';
-				}
-			}//先算乘除		
-			for (h = 0; h < j; h++){
-				num[h + 1] = cal(num[h], op[h], num[h + 1]);
-				test.a = num[h + 1].a; test.b = num[h + 1].b;
-			}//进行计算
-			cout << "答案:"<<test.a << '/' << test.b;
+				}			
+			}//先算乘除
+			for (h = 0; h < j; h++)
+				num[h + 1] = cal(num[h], op[h], num[h + 1]);//再算加减
 
 			fs answer;
-			if (test.b == 1){
+			if (num[h].b == 1){
 				cin >> answer.a;
 				answer.b = 1;
 			}
 			else cin >> answer.a >> answer.line >> answer.b;
-
-			if (answer.a == test.a && answer.b == test.b){
+			cin >> q;
+			if (answer.a == num[h].a && answer.b == num[h].b){
 				printf("正确！");
 				k += 1;
 			}
 			else {
 				cout << "不正确！正确答案=";
-				if (test.b == 1) cout << test.a;
-				else cout << test.a << '/' << test.b;
+				if (num[h].b == 1) cout << num[h].a;
+				else cout << num[h].a << '/' << num[h].b;
 			}
 		}
 		float s = 100 * k / n;
 		cout << "\n正确率：" << k << '/' << n << endl;
 		cout << "本次得分：" << s << endl << "再来一套？（Y/N）：";
 		cin >> yes;
-		if (yes == 'y' || 'Y')begin = 0;
-		else begin = 1;
+		if (yes == 'y' || yes == 'Y')begin = 0;
 	}
 	system("pause");
 	return 0;
