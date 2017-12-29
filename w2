@@ -179,6 +179,7 @@ int main(){
 				if (num[h].b == 1) cout << num[h].a;
 				else cout << num[h].a << '/' << num[h].b;
 			}
+			cout << endl;
 		}
 		s = 100 * k / n;
 		cout << endl << "正确率：" << k << '/' << n << endl;
